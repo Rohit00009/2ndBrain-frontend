@@ -9,6 +9,8 @@ interface ButtonProps {
   startIcon?: ReactElement;
   endIcon?: ReactElement;
   onClick?: () => void;
+  fullwidth?: boolean;
+  loading?: boolean;
 }
 
 const sizeStyles = {
@@ -30,7 +32,10 @@ export const Button = (props: ButtonProps) => {
       onClick={props.onClick}
       className={`${variantStyles[props.variant]} ${defaultStyles} ${
         sizeStyles[props.size]
-      }`}
+      } ${props.fullwidth ? "w-full flex justify-center items-center" : ""} ${
+        props.loading ? "opacity-45" : ""
+      } `}
+      disabled={props.loading}
     >
       {props.startIcon ? <div className="pr-2">{props.startIcon}</div> : null}
       {props.text}{" "}
@@ -38,13 +43,3 @@ export const Button = (props: ButtonProps) => {
     </button>
   );
 };
-{
-  /* <Button
-  variant="primary"
-  size="md"
-  onClick={() => {
-    console.log("Button clicked");
-  }}
-  text={"ro"}
-/>; */
-}

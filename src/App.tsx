@@ -1,54 +1,17 @@
-import { useState } from "react";
-import "./App.css";
-import { Button } from "./components/ui/Button";
-import { Card } from "./components/ui/Card";
-import { CreateContentModel } from "./components/ui/CreateContentModel";
-import { PlusIcon } from "./icons/Plusicon";
-import { ShareIcon } from "./icons/Shareicon";
+import { Dashboard } from "./pages/dashboard";
+import { Signin } from "./pages/Signin";
+import { Signup } from "./pages/Signup";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
-  const [modelOpen, setModelOpen] = useState(true);
   return (
-    <div className="p-4">
-      <CreateContentModel
-        open={modelOpen}
-        onclose={() => {
-          setModelOpen(false);
-        }}
-      />
-      <div className="flex justify-end gap-2">
-        <Button
-          onClick={() => {
-            setModelOpen(true);
-          }}
-          startIcon={<PlusIcon size={"md"} />}
-          variant="primary"
-          text="Add content"
-          size="md"
-        />
-        <Button
-          startIcon={<ShareIcon size={"md"} />}
-          variant="secondary"
-          text="Share Brain"
-          size="md"
-          onClick={() => {}}
-        />
-      </div>
-
-      <div className="flex gap-4">
-        <Card
-          type="twitter"
-          link="https://x.com/reown_/status/1928129257412161664"
-          title={"First tweet"}
-        />
-
-        <Card
-          type="youtube"
-          link="https://www.youtube.com/watch?v=e_oQe-F1ixQ"
-          title={"First Video"}
-        />
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/signin" element={<Signin />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
