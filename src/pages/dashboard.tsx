@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../App.css";
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
@@ -6,12 +6,22 @@ import { CreateContentModel } from "../components/ui/CreateContentModel";
 import { PlusIcon } from "../icons/Plusicon";
 import { ShareIcon } from "../icons/Shareicon";
 import { Sidebar } from "../components/ui/Sidebar";
+import { useContent } from "../hooks/useContent";
+import axios from "axios";
+import { BACKEND_URL } from "../config";
 
 export function Dashboard() {
   const [modelOpen, setModelOpen] = useState(false);
+  const { contents, refresh } = useContent();
+  const [selectedCategory, setSelectedCategory] = useState("all");
+
+  useEffect(() => {
+    refresh();
+  }, [modelOpen]);
+
   return (
     <div>
-      <Sidebar />
+      <Sidebar setSelectedCategory={setSelectedCategory} />
       <div className="p-4 ml-72 min-h-screen bg-gray-100 ">
         <CreateContentModel
           open={modelOpen}
@@ -30,26 +40,49 @@ export function Dashboard() {
             size="md"
           />
           <Button
+            onClick={async () => {
+              try {
+                const response = await axios.post(
+                  `${BACKEND_URL}/api/v1/brain/share`,
+                  { share: true },
+                  {
+                    headers: {
+                      Authorization: localStorage.getItem("token"),
+                    },
+                  }
+                );
+
+                const hash = response.data.hash;
+                if (!hash) {
+                  alert("Something went wrong: No hash returned.");
+                  return;
+                }
+
+                const shareUrl = `${window.location.origin}/share/${hash}`;
+
+                await navigator.clipboard.writeText(shareUrl);
+                alert("Link copied to clipboard:\n" + shareUrl);
+              } catch (error) {
+                console.error("Error sharing brain:", error);
+                alert("Failed to generate share link.");
+              }
+            }}
             startIcon={<ShareIcon size={"md"} />}
             variant="secondary"
             text="Share Brain"
             size="md"
-            onClick={() => {}}
           />
         </div>
 
-        <div className="flex gap-4">
-          <Card
-            type="twitter"
-            link="https://x.com/reown_/status/1928129257412161664"
-            title={"First tweet"}
-          />
-
-          <Card
-            type="youtube"
-            link="https://www.youtube.com/watch?v=e_oQe-F1ixQ"
-            title={"First Video"}
-          />
+        <div className="flex gap-4 flex-wrap">
+          {contents
+            .filter(({ type }) => {
+              if (selectedCategory === "all") return true;
+              return (type as string).toLowerCase() === selectedCategory;
+            })
+            .map(({ type, link, title }) => (
+              <Card key={link} type={type} link={link} title={title} />
+            ))}
         </div>
       </div>
     </div>
