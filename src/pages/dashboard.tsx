@@ -30,7 +30,7 @@ export function Dashboard() {
       <Sidebar setSelectedCategory={setSelectedCategory} />
 
       {/* Main Content */}
-      <div className="flex-1 ml-72 p-6 bg-gray-100">
+      <div className="flex-1 bg-gray-100 p-6 md:ml-72">
         <CreateContentModel
           open={modelOpen}
           onclose={() => setModelOpen(false)}
@@ -51,24 +51,14 @@ export function Dashboard() {
                 const response = await axios.post(
                   `${BACKEND_URL}/api/v1/brain/share`,
                   { share: true },
-                  {
-                    headers: {
-                      Authorization: localStorage.getItem("token"),
-                    },
-                  }
+                  { headers: { Authorization: localStorage.getItem("token") } }
                 );
-
                 const hash = response.data.hash;
-                if (!hash) {
-                  alert("Something went wrong: No hash returned.");
-                  return;
-                }
-
                 const shareUrl = `${window.location.origin}/share/${hash}`;
                 await navigator.clipboard.writeText(shareUrl);
-                alert("Link copied to clipboard:\n" + shareUrl);
+                alert("Link copied:\n" + shareUrl);
               } catch (error) {
-                console.error("Error sharing brain:", error);
+                console.error(error);
                 alert("Failed to generate share link.");
               }
             }}
@@ -88,10 +78,11 @@ export function Dashboard() {
         {/* Saved Posts */}
         <div className="flex gap-4 flex-wrap mt-4">
           {contents
-            .filter(({ type }) => {
-              if (selectedCategory === "all") return true;
-              return (type as string).toLowerCase() === selectedCategory;
-            })
+            .filter(
+              ({ type }) =>
+                selectedCategory === "all" ||
+                (type as string).toLowerCase() === selectedCategory
+            )
             .map(({ type, link, title }) => (
               <Card key={link} type={type} link={link} title={title} />
             ))}
