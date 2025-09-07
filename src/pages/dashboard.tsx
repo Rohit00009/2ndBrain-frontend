@@ -19,21 +19,27 @@ export function Dashboard() {
     refresh();
   }, [modelOpen]);
 
+  function handleLogout() {
+    localStorage.removeItem("token");
+    window.location.href = "/"; // redirect to home page
+  }
+
   return (
-    <div>
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
       <Sidebar setSelectedCategory={setSelectedCategory} />
-      <div className="p-4 ml-72 min-h-screen bg-gray-100 ">
+
+      {/* Main Content */}
+      <div className="flex-1 ml-72 p-6 bg-gray-100">
         <CreateContentModel
           open={modelOpen}
-          onclose={() => {
-            setModelOpen(false);
-          }}
+          onclose={() => setModelOpen(false)}
         />
-        <div className="flex justify-end gap-2">
+
+        {/* Top Buttons */}
+        <div className="flex justify-end gap-2 mb-6">
           <Button
-            onClick={() => {
-              setModelOpen(true);
-            }}
+            onClick={() => setModelOpen(true)}
             startIcon={<PlusIcon size={"md"} />}
             variant="primary"
             text="Add content"
@@ -59,7 +65,6 @@ export function Dashboard() {
                 }
 
                 const shareUrl = `${window.location.origin}/share/${hash}`;
-
                 await navigator.clipboard.writeText(shareUrl);
                 alert("Link copied to clipboard:\n" + shareUrl);
               } catch (error) {
@@ -72,9 +77,16 @@ export function Dashboard() {
             text="Share Brain"
             size="md"
           />
+          <Button
+            onClick={handleLogout}
+            variant="secondary"
+            text="Logout"
+            size="md"
+          />
         </div>
 
-        <div className="flex gap-4 flex-wrap">
+        {/* Saved Posts */}
+        <div className="flex gap-4 flex-wrap mt-4">
           {contents
             .filter(({ type }) => {
               if (selectedCategory === "all") return true;

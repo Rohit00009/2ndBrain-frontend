@@ -1,9 +1,13 @@
-import { Dashboard } from "./pages/dashboard";
+import { BrowserRouter } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Home } from "./pages/Home";
-import { Share } from "./pages/Share";
-import { Signin } from "./pages/Signin";
 import { Signup } from "./pages/Signup";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Signin } from "./pages/Signin";
+import { Dashboard } from "./pages/dashboard";
+import { Share } from "./pages/Share";
+import { About } from "./pages/About";
+import { Services } from "./pages/Services";
+import { Contact } from "./pages/Contact";
 
 function App() {
   return (
@@ -14,6 +18,9 @@ function App() {
         <Route path="/signin" element={<Signin />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/share/:hash" element={<Share />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/contact" element={<Contact />} />
       </Routes>
     </BrowserRouter>
   );
