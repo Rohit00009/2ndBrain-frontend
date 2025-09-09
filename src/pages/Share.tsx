@@ -24,15 +24,18 @@ export function Share() {
     fetchContent();
   }, [hash]);
 
-  if (error)
-    return <div className="text-center text-red-500 mt-4">{error}</div>;
+  if (error) {
+    return <div className="text-center text-red-500 mt-6 text-lg">{error}</div>;
+  }
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-semibold mb-4">
+    <div className="min-h-screen bg-white font-poppins text-gray-700 flex flex-col items-center p-4">
+      <h1 className="text-2xl md:text-3xl font-semibold mb-6 text-center">
         Shared by {data?.username}
       </h1>
-      <div className="flex flex-wrap gap-4">
+
+      {/* Responsive Grid */}
+      <div className="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {data?.content.map(({ type, link, title }, idx) => (
           <Card key={idx} type={type} link={link} title={title} />
         ))}
