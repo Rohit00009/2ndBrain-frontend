@@ -86,18 +86,10 @@ export function Dashboard() {
         </div>
 
         {/* Saved Posts */}
-        <div className="flex gap-4 flex-wrap mt-4">
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 mt-4">
           {filteredContents.map(({ id, type, link, title }) => (
-            <div
-              key={id || link}
-              className="flex-1 min-w-[250px] max-w-[400px]"
-            >
-              <Card
-                key={`${id || link}-${type}-${link}`}
-                type={type}
-                link={link}
-                title={title}
-              />
+            <div key={id || link} className="mb-4 break-inside-avoid">
+              <Card type={type} link={link} title={title} />
             </div>
           ))}
         </div>
