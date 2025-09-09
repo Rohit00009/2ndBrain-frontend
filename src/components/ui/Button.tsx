@@ -11,6 +11,7 @@ interface ButtonProps {
   onClick?: () => void;
   fullwidth?: boolean;
   loading?: boolean;
+  disabled?: boolean; // <-- add this
 }
 
 const sizeStyles = {
@@ -30,15 +31,15 @@ export const Button = (props: ButtonProps) => {
   return (
     <button
       onClick={props.onClick}
+      disabled={props.disabled || props.loading} // combine disabled + loading
       className={`${variantStyles[props.variant]} ${defaultStyles} ${
         sizeStyles[props.size]
       } ${props.fullwidth ? "w-full flex justify-center items-center" : ""} ${
-        props.loading ? "opacity-45" : ""
-      } `}
-      disabled={props.loading}
+        props.disabled || props.loading ? "opacity-45 cursor-not-allowed" : ""
+      }`}
     >
       {props.startIcon ? <div className="pr-2">{props.startIcon}</div> : null}
-      {props.text}{" "}
+      {props.loading ? "Loading..." : props.text}{" "}
       {props.endIcon ? <div className="pl-2">{props.endIcon}</div> : null}
     </button>
   );

@@ -1,11 +1,42 @@
 import { Link } from "react-router-dom";
 import { Logo } from "../icons/Logo";
-import { useState } from "react";
-import { Menu, X } from "lucide-react"; // npm install lucide-react
-import { motion, AnimatePresence } from "framer-motion"; // npm install framer-motion
+import { useState, useEffect } from "react";
+import { Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-purple-100 via-white to-purple-50">
+        {/* Glassmorphic Circle */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.6 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative w-72 h-72 flex flex-col justify-center items-center 
+                     rounded-full bg-white/20 backdrop-blur-xl shadow-2xl border border-white/30"
+        >
+          {/* Spinning Border */}
+          <div className="absolute inset-0 rounded-full border-4 border-purple-600 border-t-transparent animate-spin" />
+
+          {/* Logo + Name */}
+          <div className="z-10 flex flex-col items-center">
+            <Logo size="lg" className="h-16 w-16 text-purple-600 mb-4" />
+            <h1 className="text-3xl font-bold text-purple-700">Braino</h1>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen font-poppins text-gray-700 bg-white flex flex-col items-center">
@@ -55,32 +86,16 @@ export function Home() {
               transition={{ duration: 0.1, ease: "easeInOut" }}
               className="md:hidden flex flex-col items-center gap-4 py-4 border-t border-gray-200 bg-white/90 rounded-b-2xl overflow-hidden"
             >
-              <Link
-                to="/"
-                className="hover:underline"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link to="/" onClick={() => setMenuOpen(false)}>
                 Home
               </Link>
-              <Link
-                to="/about"
-                className="hover:underline"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link to="/about" onClick={() => setMenuOpen(false)}>
                 About
               </Link>
-              <Link
-                to="/services"
-                className="hover:underline"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link to="/services" onClick={() => setMenuOpen(false)}>
                 Services
               </Link>
-              <Link
-                to="/contact"
-                className="hover:underline"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link to="/contact" onClick={() => setMenuOpen(false)}>
                 Contact
               </Link>
             </motion.nav>

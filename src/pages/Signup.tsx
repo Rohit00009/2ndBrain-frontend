@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { BACKEND_URL } from "../config";
@@ -9,17 +9,31 @@ import { Logo } from "../icons/Logo";
 export function Signup() {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   async function signup() {
     const username = usernameRef.current?.value;
     const password = passwordRef.current?.value;
-    await axios.post(BACKEND_URL + "/api/v1/signup", {
-      username,
-      password,
-    });
-    navigate("/signin");
-    alert("You have signed up!");
+
+    if (!username || !password) {
+      alert("Username and password are required!");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await axios.post(BACKEND_URL + "/api/v1/signup", {
+        username,
+        password,
+      });
+      alert("You have signed up!");
+      navigate("/signin");
+    } catch (err) {
+      alert("Signup failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -35,15 +49,16 @@ export function Signup() {
 
         <div className="w-full space-y-4">
           <Input ref={usernameRef} placeholder="Username" />
-          <Input ref={passwordRef} placeholder="Password" />
+          <Input ref={passwordRef} placeholder="Password"/>
         </div>
 
         <div className="flex justify-center pt-6 w-full">
           <Button
             onClick={signup}
-            loading={false}
+            loading={loading}
+            disabled={loading}
             variant="primary"
-            text="Sign Up"
+            text={loading ? "Signing Up..." : "Sign Up"}
             size="md"
             fullwidth={true}
           />

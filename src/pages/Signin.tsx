@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { BACKEND_URL } from "../config";
@@ -9,18 +9,28 @@ import { Logo } from "../icons/Logo";
 export function Signin() {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState(false); // track loading state
   const navigate = useNavigate();
 
   async function signin() {
-    const username = usernameRef.current?.value;
-    const password = passwordRef.current?.value;
-    const response = await axios.post(BACKEND_URL + "/api/v1/signin", {
-      username,
-      password,
-    });
-    const jwt = response.data.token;
-    localStorage.setItem("token", jwt);
-    navigate("/dashboard");
+    setLoading(true);
+    try {
+      const username = usernameRef.current?.value;
+      const password = passwordRef.current?.value;
+
+      const response = await axios.post(BACKEND_URL + "/api/v1/signin", {
+        username,
+        password,
+      });
+
+      const jwt = response.data.token;
+      localStorage.setItem("token", jwt);
+      navigate("/dashboard");
+    } catch (err) {
+      alert("Signin failed. Please check your username/password.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -42,9 +52,9 @@ export function Signin() {
         <div className="flex justify-center pt-6 w-full">
           <Button
             onClick={signin}
-            loading={false}
+            loading={loading}
             variant="primary"
-            text="Sign In"
+            text={loading ? "Signing in..." : "Sign In"}
             size="md"
             fullwidth={true}
           />
