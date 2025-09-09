@@ -3,6 +3,11 @@ import { Logo } from "../../icons/Logo";
 import { Tweeticon } from "../../icons/Tweeticon";
 import { Youtubeicon } from "../../icons/Youtubeicon";
 import { SidebarItem } from "./SidebarItem";
+import { InstagramIcon } from "../../icons/Instagram";
+import { GithubIcon } from "../../icons/Github";
+import { LinkedinIcon } from "../../icons/Linkedin";
+import { FacebookIcon } from "../../icons/Facebook";
+import { ChromeIcon } from "../../icons/Chrome";
 
 export function Sidebar({
   setSelectedCategory,
@@ -13,7 +18,6 @@ export function Sidebar({
 
   return (
     <>
-      {/* Mobile topbar with hamburger */}
       <div className="flex items-center justify-between p-4 bg-white/30 backdrop-blur-md md:hidden shadow-md">
         <div
           className="flex items-center gap-2 text-xl font-bold text-purple-600 cursor-pointer"
@@ -26,7 +30,6 @@ export function Sidebar({
         </button>
       </div>
 
-      {/* Sidebar */}
       <div
         className={`fixed top-0 left-0 h-screen w-72 bg-white/20 backdrop-blur-xl border-r border-gray-200 flex flex-col p-6 gap-6 shadow-xl rounded-tr-3xl rounded-br-3xl
         transform transition-transform duration-300 ease-in-out
@@ -34,7 +37,6 @@ export function Sidebar({
         md:translate-x-0 md:flex
         `}
       >
-        {/* Logo */}
         <div
           className="flex items-center gap-2 text-2xl font-bold text-purple-600 cursor-pointer hover:text-purple-800 transition"
           onClick={() => setSelectedCategory("all")}
@@ -43,7 +45,6 @@ export function Sidebar({
           Braino
         </div>
 
-        {/* Menu */}
         <div className="flex flex-col gap-3 mt-8">
           <SidebarItem
             text="All Content"
@@ -56,14 +57,38 @@ export function Sidebar({
             onClick={() => setSelectedCategory("twitter")}
           />
           <SidebarItem
-            text="Youtube"
+            text="YouTube"
             icon={<Youtubeicon size="lg" />}
             onClick={() => setSelectedCategory("youtube")}
+          />
+          <SidebarItem
+            text="Instagram"
+            icon={<InstagramIcon size="lg" />}
+            onClick={() => setSelectedCategory("instagram")}
+          />
+          <SidebarItem
+            text="GitHub"
+            icon={<GithubIcon size="lg" />}
+            onClick={() => setSelectedCategory("github")}
+          />
+          <SidebarItem
+            text="LinkedIn"
+            icon={<LinkedinIcon size="lg" />}
+            onClick={() => setSelectedCategory("linkedin")}
+          />
+          <SidebarItem
+            text="Facebook"
+            icon={<FacebookIcon size="lg" />}
+            onClick={() => setSelectedCategory("facebook")}
+          />
+          <SidebarItem
+            text="Chrome"
+            icon={<ChromeIcon size="lg" />}
+            onClick={() => setSelectedCategory("chrome")}
           />
         </div>
       </div>
 
-      {/* Overlay when sidebar is open on mobile */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black/30 z-10 md:hidden"

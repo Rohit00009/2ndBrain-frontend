@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import "../App.css";
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
@@ -21,8 +21,19 @@ export function Dashboard() {
 
   function handleLogout() {
     localStorage.removeItem("token");
-    window.location.href = "/"; // redirect to home page
+    window.location.href = "/";
   }
+
+  // Memoize filtered contents to prevent unnecessary re-renders
+  const filteredContents = useMemo(
+    () =>
+      contents.filter(
+        ({ type }) =>
+          selectedCategory === "all" ||
+          type.toLowerCase() === selectedCategory.toLowerCase()
+      ),
+    [contents, selectedCategory]
+  );
 
   return (
     <div className="flex min-h-screen">
@@ -77,15 +88,20 @@ export function Dashboard() {
 
         {/* Saved Posts */}
         <div className="flex gap-4 flex-wrap mt-4">
-          {contents
-            .filter(
-              ({ type }) =>
-                selectedCategory === "all" ||
-                (type as string).toLowerCase() === selectedCategory
-            )
-            .map(({ type, link, title }) => (
-              <Card key={link} type={type} link={link} title={title} />
-            ))}
+          {filteredContents.map(({ id, type, link, title }) => (
+            <div
+              key={id || link}
+              className="flex-1 min-w-[250px] max-w-[400px]"
+            >
+              {/* Pass unique key to Card so it remounts if type or link changes */}
+              <Card
+                key={`${id || link}-${type}-${link}`}
+                type={type}
+                link={link}
+                title={title}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </div>
