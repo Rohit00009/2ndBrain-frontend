@@ -24,7 +24,6 @@ export function Dashboard() {
     window.location.href = "/";
   }
 
-  // Memoize filtered contents to prevent unnecessary re-renders
   const filteredContents = useMemo(
     () =>
       contents.filter(
@@ -41,14 +40,14 @@ export function Dashboard() {
       <Sidebar setSelectedCategory={setSelectedCategory} />
 
       {/* Main Content */}
-      <div className="flex-1 bg-gray-100 p-6 md:ml-72">
+      <div className="flex-1 bg-gray-100 p-6 pt-24 md:pt-6 md:ml-72">
         <CreateContentModel
           open={modelOpen}
           onclose={() => setModelOpen(false)}
         />
 
         {/* Top Buttons */}
-        <div className="flex justify-end gap-2 mb-6">
+        <div className="flex justify-end gap-2 mb-6 relative z-20 flex-wrap">
           <Button
             onClick={() => setModelOpen(true)}
             startIcon={<PlusIcon size={"md"} />}
@@ -93,7 +92,6 @@ export function Dashboard() {
               key={id || link}
               className="flex-1 min-w-[250px] max-w-[400px]"
             >
-              {/* Pass unique key to Card so it remounts if type or link changes */}
               <Card
                 key={`${id || link}-${type}-${link}`}
                 type={type}

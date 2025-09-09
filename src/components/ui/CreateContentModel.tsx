@@ -24,17 +24,17 @@ export function CreateContentModel({ open, onclose }) {
     const title = titleRef.current?.value;
     const link = linkRef.current?.value;
 
+    if (!title || !link) return alert("Please provide title and link");
+
     await axios.post(
       `${BACKEND_URL}/api/v1/content`,
       {
         link,
         title,
-        type: type.toLowerCase(), // Force lowercase storage
+        type: type.toLowerCase(),
       },
       {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        },
+        headers: { Authorization: localStorage.getItem("token") },
       }
     );
 
@@ -44,40 +44,45 @@ export function CreateContentModel({ open, onclose }) {
   return (
     <div>
       {open && (
-        <div className="w-screen h-screen bg-opacity-60 backdrop-blur-sm fixed top-0 left-0 flex justify-center items-center transition-opacity duration-1000">
-          <div className="flex items-center">
-            <div className="bg-white opacity-100 p-4 rounded shadow-lg">
-              <div className="flex justify-end">
-                <div onClick={onclose} className="cursor-pointer">
-                  <CrossIcon size={"md"} />
-                </div>
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+          <div className="bg-white w-full max-w-lg rounded-lg shadow-lg p-6 flex flex-col gap-4">
+            {/* Close */}
+            <div className="flex justify-end">
+              <div onClick={onclose} className="cursor-pointer">
+                <CrossIcon size={"md"} />
               </div>
-              <div className="flex justify-center items-center">
-                <Input ref={titleRef} placeholder={"Title"} />
-                <Input ref={linkRef} placeholder={"Link"} />
+            </div>
+
+            {/* Inputs */}
+            <div className="flex flex-col gap-4 sm:flex-row">
+              <Input ref={titleRef} placeholder={"Title"} />
+              <Input ref={linkRef} placeholder={"Link"} />
+            </div>
+
+            {/* Type Buttons */}
+            <div>
+              <h1 className="text-center font-semibold">Type</h1>
+              <div className="flex flex-wrap gap-2 justify-center p-2">
+                {Object.values(ContentType).map((ct) => (
+                  <Button
+                    key={ct}
+                    text={ct.charAt(0).toUpperCase() + ct.slice(1)}
+                    variant={type === ct ? "primary" : "secondary"}
+                    onClick={() => setType(ct)}
+                    size="sm"
+                  />
+                ))}
               </div>
-              <div>
-                <h1 className="flex justify-center">Type</h1>
-                <div className="flex gap-1 p-4 pl-6">
-                  {Object.values(ContentType).map((ct) => (
-                    <Button
-                      key={ct}
-                      text={ct.charAt(0).toUpperCase() + ct.slice(1)}
-                      variant={type === ct ? "primary" : "secondary"}
-                      onClick={() => setType(ct)}
-                      size="md"
-                    />
-                  ))}
-                </div>
-              </div>
-              <div className="flex justify-center">
-                <Button
-                  variant="primary"
-                  size="md"
-                  text="Submit"
-                  onClick={addContent}
-                />
-              </div>
+            </div>
+
+            {/* Submit */}
+            <div className="flex justify-center mt-2">
+              <Button
+                variant="primary"
+                size="md"
+                text="Submit"
+                onClick={addContent}
+              />
             </div>
           </div>
         </div>

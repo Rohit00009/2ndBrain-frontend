@@ -11,7 +11,14 @@ export function useContent() {
       const response = await axios.get(`${BACKEND_URL}/api/v1/content`, {
         headers: { Authorization: token },
       });
-      setContents(response.data.content || []);
+
+      const uniqueContents = Array.from(
+        new Map(
+          (response.data.content || []).map((item: any) => [item.link, item])
+        ).values()
+      );
+
+      setContents(uniqueContents);
     } catch (error) {
       console.error("Failed to fetch content:", error);
     }

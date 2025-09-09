@@ -18,23 +18,30 @@ export function Sidebar({
 
   return (
     <>
-      <div className="flex items-center justify-between p-4 bg-white/30 backdrop-blur-md md:hidden shadow-md">
+      {/* Top fixed header (Logo + Hamburger) */}
+      <div className="flex items-center justify-between p-4 bg-white/30 backdrop-blur-md shadow-md fixed top-0 left-0 right-0 z-30 md:hidden">
         <div
           className="flex items-center gap-2 text-xl font-bold text-purple-600 cursor-pointer"
           onClick={() => setSelectedCategory("all")}
         >
           <Logo size="md" /> Braino
         </div>
-        <button onClick={() => setIsOpen(!isOpen)} className="text-purple-600">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="text-purple-600 text-3xl font-bold"
+          aria-label="Toggle Sidebar"
+        >
           ☰
         </button>
       </div>
 
+      {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-screen w-72 bg-white/20 backdrop-blur-xl border-r border-gray-200 flex flex-col p-6 gap-6 shadow-xl rounded-tr-3xl rounded-br-3xl
-        transform transition-transform duration-300 ease-in-out
-        ${isOpen ? "translate-x-0" : "-translate-x-full"} 
-        md:translate-x-0 md:flex
+        className={`fixed top-0 left-0 h-screen w-72 bg-white/20 backdrop-blur-xl border-r border-gray-200 flex flex-col p-6 shadow-xl rounded-tr-3xl rounded-br-3xl
+          overflow-hidden transform transition-transform duration-300 ease-in-out
+          z-40
+          ${isOpen ? "translate-x-0" : "-translate-x-full"} 
+          md:translate-x-0 md:flex
         `}
       >
         <div
@@ -45,7 +52,7 @@ export function Sidebar({
           Braino
         </div>
 
-        <div className="flex flex-col gap-3 mt-8">
+        <div className="flex flex-col gap-3 mt-8 overflow-y-auto flex-1">
           <SidebarItem
             text="All Content"
             icon={<Logo size="lg" />}
@@ -89,12 +96,13 @@ export function Sidebar({
         </div>
       </div>
 
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/30 z-10 md:hidden"
-          onClick={() => setIsOpen(false)}
-        ></div>
-      )}
+      {/* Animated Background Overlay */}
+      <div
+        className={`fixed inset-0 bg-black/30 z-30 md:hidden transition-opacity duration-300 ${
+          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setIsOpen(false)}
+      ></div>
     </>
   );
 }
