@@ -1,17 +1,27 @@
 import { Link } from "react-router-dom";
 import { Logo } from "../icons/Logo";
+import { useState } from "react";
+import { Menu, X } from "lucide-react"; // npm install lucide-react
+import { motion, AnimatePresence } from "framer-motion"; // npm install framer-motion
 
 export function Home() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen font-poppins text-gray-700 bg-white flex flex-col items-center">
-      {/* Fixed Header with Glassmorphism and Rounded Capsule */}
-      <header className="fixed top-6 left-1/2 -translate-x-1/2 z-50 backdrop-blur-md bg-white/30 shadow-lg rounded-full">
-        <div className="max-w-6xl flex justify-between items-center py-4 px-8 space-x-6">
+      {/* Fixed Header */}
+      <header className="fixed top-6 left-1/2 -translate-x-1/2 z-50 backdrop-blur-md bg-white/30 shadow-lg rounded-full w-[95%] max-w-6xl">
+        <div className="flex justify-between items-center py-3 px-6">
+          {/* Logo */}
           <div className="flex items-center gap-3">
             <Logo size="md" className="h-8 w-8 text-purple-600" />
-            <span className="text-3xl font-bold text-gray-800">Braino</span>
+            <span className="text-2xl md:text-3xl font-bold text-gray-800">
+              Braino
+            </span>
           </div>
-          <nav className="flex items-center space-x-6 text-gray-700">
+
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center space-x-6 text-gray-700">
             <Link to="/" className="hover:underline">
               Home
             </Link>
@@ -25,10 +35,60 @@ export function Home() {
               Contact
             </Link>
           </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="md:hidden p-2 rounded-lg bg-white/50 hover:bg-white transition"
+          >
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
+
+        {/* Animated Mobile Dropdown */}
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.nav
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.1, ease: "easeInOut" }}
+              className="md:hidden flex flex-col items-center gap-4 py-4 border-t border-gray-200 bg-white/90 rounded-b-2xl overflow-hidden"
+            >
+              <Link
+                to="/"
+                className="hover:underline"
+                onClick={() => setMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link
+                to="/about"
+                className="hover:underline"
+                onClick={() => setMenuOpen(false)}
+              >
+                About
+              </Link>
+              <Link
+                to="/services"
+                className="hover:underline"
+                onClick={() => setMenuOpen(false)}
+              >
+                Services
+              </Link>
+              <Link
+                to="/contact"
+                className="hover:underline"
+                onClick={() => setMenuOpen(false)}
+              >
+                Contact
+              </Link>
+            </motion.nav>
+          )}
+        </AnimatePresence>
       </header>
 
-      {/* Add padding-top to avoid content under the fixed header */}
+      {/* Page Content (padding so header doesn't overlap) */}
       <div className="pt-32 w-full flex flex-col items-center">
         {/* Hero Section */}
         <section className="text-center max-w-4xl p-12">
@@ -47,7 +107,7 @@ export function Home() {
           </Link>
         </section>
 
-        {/* Feature Cards */}
+        {/* Features */}
         <section className="max-w-6xl p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {[
             {
@@ -85,7 +145,7 @@ export function Home() {
           ))}
         </section>
 
-        {/* Buy / Pricing Cards */}
+        {/* Pricing */}
         <section className="w-full max-w-6xl p-12 text-center">
           <h2 className="text-4xl font-bold text-gray-800 mb-8">
             Choose Your Plan
